@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments (Nếu bạn có dùng môi trường ảo)
+venv/
+.venv/
+env/
+
+# Editor Directories (Chặn cấu hình riêng của VS Code)
+.vscode/
