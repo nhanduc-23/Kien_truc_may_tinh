@@ -31,14 +31,14 @@ TIMEOUT = 0.5
 MAX_DATA_POINTS = 30
 
 # Mặc định kết nối TCP LAN sang PC2 Server
-DEFAULT_PC2_IP = "127.0.0.1"
+DEFAULT_PC2_IP = "192.168.1.100"
 DEFAULT_PC2_PORT = 65432
 
 # ==========================================================
 # CẤU HÌNH NGƯỠNG ĐIỀU KHIỂN TỰ ĐỘNG
 # ==========================================================
 TEMP_AUTO_THRESHOLD = 31.0  # Ngưỡng bật quạt (>= 31.0 °C)
-HUMI_AUTO_THRESHOLD = 65.0  # Ngưỡng bật bơm (< 65.0 %)
+HUMI_AUTO_THRESHOLD = 50.0  # Ngưỡng bật bơm (< 65.0 %)
 auto_mode_enabled = True     # Mặc định bật chế độ tự động theo ngưỡng
 
 # ==========================================================
@@ -448,33 +448,62 @@ def disconnect_tcp_lan():
     sidebar_web.configure(text="● PC2 SERVER OFFLINE", text_color=RED)
     add_log("Đã ngắt kết nối LAN với PC2 Server")
 
+import json
+import socket
+
 def listen_pc2_commands():
     global tcp_socket, tcp_connected
     buffer = ""
+    
+    # Đặt timeout ngắn (2 giây) để socket không bị treo và vẫn có thể kiểm tra cờ tcp_connected
+    if tcp_socket:
+        tcp_socket.settimeout(2.0)
+
     while tcp_connected and tcp_socket:
         try:
             data = tcp_socket.recv(1024)
-            if not data: break
-            buffer += data.decode('utf-8')
+            if not data:
+                # PC2 Server chủ động đóng kết nối
+                add_log("PC2 Server đã đóng kết nối TCP.", "WARNING")
+                break
+                
+            buffer += data.decode('utf-8', errors='ignore')
+            
+            # Cắt chuỗi theo ký tự xuống dòng '\n' để xử lý từng gói tin JSON
             while "\n" in buffer:
                 line, buffer = buffer.split("\n", 1)
-                if not line.strip(): continue
+                line = line.strip()
+                if not line:
+                    continue
+                
                 try:
                     cmd_pkt = json.loads(line)
                     action = cmd_pkt.get("action")
                     add_log(f"Nhận lệnh từ PC2 Server: {action}")
 
-                    if action == "toggle_bom": toggle_bom()
-                    elif action == "toggle_quat": toggle_quat()
-                    elif action == "off_all": turn_off_all()
+                    if action == "toggle_bom":
+                        toggle_bom()
+                    elif action == "toggle_quat":
+                        toggle_quat()
+                    elif action == "off_all":
+                        turn_off_all()
                     elif action == "calibrate_sensor":
                         new_slave = int(cmd_pkt.get("new_slave_id", SENSOR_SLAVE_ID))
                         new_baud = int(cmd_pkt.get("new_baudrate", SENSOR_BAUDRATE))
                         calibrate_sensor(new_slave, new_baud)
                 except Exception as e:
-                    add_log(f"Lỗi xử lý lệnh từ PC2: {e}", "ERROR")
-        except Exception:
+                    add_log(f"Lỗi giải mã JSON/Thực thi lệnh PC2: {e}", "ERROR")
+
+        except (socket.timeout, TimeoutError):
+            # Hết 2 giây không nhận được gói tin mới -> Tiếp tục vòng lặp chờ, KHÔNG ngắt mạng
+            continue
+            
+        except Exception as e:
+            if tcp_connected:
+                add_log(f"Lỗi kết nối Socket LAN: {e}", "ERROR")
             break
+
+    # Tự động dọn dẹp trạng thái kết nối khi thoát vòng lặp
     disconnect_tcp_lan()
 
 def push_packet_to_pc2():
