@@ -38,7 +38,7 @@ DEFAULT_PC2_PORT = 65432
 # CẤU HÌNH NGƯỠNG ĐIỀU KHIỂN TỰ ĐỘNG
 # ==========================================================
 TEMP_AUTO_THRESHOLD = 31.0  # Ngưỡng bật quạt (>= 31.0 °C)
-HUMI_AUTO_THRESHOLD = 50.0  # Ngưỡng bật bơm (< 65.0 %)
+HUMI_AUTO_THRESHOLD = 65.0  # Ngưỡng bật bơm (< 65.0 %)
 auto_mode_enabled = True     # Mặc định bật chế độ tự động theo ngưỡng
 
 # ==========================================================
