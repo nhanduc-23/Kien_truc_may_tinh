@@ -1,4 +1,4 @@
-# 🌿 Hệ Thống Giám Sát Cảm Biến Môi Trường & Điều Khiển Tự Động Quạt, Máy Bơm
+# 🌿 Hệ thống làm mát Cooling Pad kết hợp quạt hút trong công nghiệp ứng dụng truyền thông Modbus RTU, TCP/IP LAN, Web Dashboard và Blynk Cloud
 
 Hệ thống IoT/SCADA đa tầng thu thập dữ liệu cảm biến môi trường (SHT40) chuẩn giao tiếp công nghiệp **Modbus RTU / RS485**, truyền tin qua mạng nội bộ **TCP/IP LAN (JSON)** và hỗ trợ giám sát/điều khiển đa nền tảng từ xa qua **Flask Web Dashboard (Cloudflare Tunnel)** và **Blynk IoT Cloud**.
 
