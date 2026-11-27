@@ -91,3 +91,5 @@ Khi chế độ **Auto** được kích hoạt và cảm biến SHT40 hoạt đ�
   - Khi $H < 65.0\%$ (độ ẩm thấp, không khí khô nóng): **Tự động BẬT Bơm nước** làm ướt tấm Cooling Pad để tăng hiệu quả làm mát bay hơi.
   - Khi $H \ge 65.0\%$: **Tự động TẮT Bơm nước** để tránh dư ẩm.
 - **Cơ chế an toàn (Fail-safe):** Nếu mất kết nối cảm biến trên đường truyền RS485, hệ thống tự động khóa kích hoạt Relay theo giá trị cũ và hiển thị cảnh báo mất tín hiệu lên giao diện HMI/Web.
+<img width="1361" height="722" alt="2aOboRD1Ccy3UcY24VVB0eNPROtJMbv42SoKjnm4" src="https://github.com/user-attachments/assets/e789f084-fa40-45af-bf68-3c5506b55ca4" />
+<img width="1366" height="726" alt="2aOboRD1CcVgiZlx9NZ3gxBoIyqlNeF3bDMXjxUe" src="https://github.com/user-attachments/assets/078bd43e-b349-4c8a-b6d1-59ef03e2e559" />
